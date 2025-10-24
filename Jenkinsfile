@@ -38,7 +38,7 @@ pipeline {
                     )
 
                     sql.execute("INSERT INTO build_status (commit_hash, status) VALUES (?,?)", [commit, status])
-                    sql.close
+                    sql.close()
                 }
             }
         }

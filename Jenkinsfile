@@ -19,6 +19,9 @@ pipeline {
 
         }
         stage('Register in DB'){
+            agent{
+                docker {image 'mysql:8'}
+            }
             steps{
                 script{
                     def commit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()

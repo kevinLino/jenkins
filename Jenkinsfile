@@ -26,7 +26,13 @@ pipeline {
 
                     echo "Registrando en la BD: ${commit} - ${status}"
 
+                    sh """
+                    mysql -h host.docker.internal -P 3307 -uroot -proot jenkins_db \
+                    -e "INSERT INTO build_status (commit_hash, status) VALUES ('${commit}', '${status}')"
+                    """
+
                     //Conexión JDBC
+                    /*
                     @Grab('mysql:mysql-connector-java:8.0.33')
                     import groovy.sql.Sql
                     
@@ -38,7 +44,7 @@ pipeline {
                     )
 
                     sql.execute("INSERT INTO build_status (commit_hash, status) VALUES (?,?)", [commit, status])
-                    sql.close()
+                    sql.close()*/
                 }
             }
         }

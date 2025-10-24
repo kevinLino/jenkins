@@ -9,7 +9,7 @@ pipeline {
                 echo 'Compilando Java....'
                 sh 'javac Main.java'
             }
-        }
+        } 
 
         stage('Test'){
             steps{

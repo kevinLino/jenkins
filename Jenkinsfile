@@ -18,6 +18,30 @@ pipeline {
             }
 
         }
+        stage('Register in DB'){
+            steps{
+                script{
+                    def commit = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    def status = currentBuild.currentResult
+
+                    echo "Registrando en la BD: ${commit} - ${status}"
+
+                    //Conexión JDBC
+                    @Grab('mysql:mysql-connector-java:8.0.33')
+                    import groovy.sql.Sql
+                    
+                    def sql = Sql.newInstance(
+                        'jdbc:mysql://host.docker.internal:3307/jenkins_db',
+                        'root',
+                        'root',
+                        'com.mysql.cj.jdbc.Driver'
+                    )
+
+                    sql.execute("INSERT INTO build_status (commit_hash, status) VALUES (?,?)", [commit, status])
+                    sql.close
+                }
+            }
+        }
 
     }
 
